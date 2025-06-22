@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OIST CSDS LMS</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Social Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Custom styles for animations if needed, though Tailwind handles most */
+        .page-transition {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .page-transition.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Style for dark mode background, applied by JS */
+        html.dark {
+            background-color: #1a202c; /* Equivalent to dark:bg-gray-900 */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 p-4 shadow-lg ">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- College Logo and Name -->
+            <div class="flex items-center">
+                <img src="https://tse4.mm.bing.net/th?id=OIP.vjOtzXmXsxpHuoELFeCMcgAAAA&pid=Api&P=0&h=180" alt="OIST Logo" class="h-10 w-10 rounded-full mr-3 border-2 border-white shadow-md">
+                <span class="text-white text-xl md:text-2xl font-bold">OIST CSDS </span>
+            </div>
+
+            <!-- User Profile, Dark Mode Toggle, and Burger Menu -->
+            <div class="flex items-center space-x-4">
+                <!-- My Profile (Anand Kumar) -->
+                <div class="flex items-center text-white text-sm">
+                    <img src="/dp.png" alt="Anand Kumar Profile" class="h-8 w-8 rounded-full mr-2 border-2 border-white shadow-sm">
+                    <span class="hidden sm:inline">Anand Kumar (Enrollment: 0105CD231028)</span>
+                    <span class="inline sm:hidden text-lg font-bold">AK</span>
+                </div>
+
+                <!-- Dark Mode Toggle -->
+                <button id="darkModeToggle" class="p-2 rounded-full text-white bg-white bg-opacity-20 hover:bg-opacity-30 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white" aria-label="Toggle Dark Mode">
+                    <!-- Sun icon for light mode -->
+                    <svg class="h-6 w-6 sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.325-6.674l.707-.707M6.05 18.05l-.707.707M1.707 2.293l1.414 1.414m16.172 16.172l1.414 1.414M12 7a5 5 0 110 10 5 5 0 010-10z"></path></svg>
+                    <!-- Moon icon for dark mode (hidden by default) -->
+                    <svg class="h-6 w-6 moon-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+
+                <!-- Mobile Menu Hamburger Icon -->
+                <button id="mobileMenuToggle" class="text-white p-2 focus:outline-none focus:ring-2 focus:ring-blue-300 rounded-md" aria-label="Open Mobile Menu">
+                    <svg class="h-6 w-6 open-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    <svg class="h-6 w-6 close-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileMenu" class="mt-4 space-y-3 bg-blue-700 dark:bg-blue-900 p-4 rounded-lg shadow-inner hidden">
+            <button class="nav-item block w-full text-left text-white text-lg font-medium px-4 py-2 rounded-md hover:bg-blue-600 dark:hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300" data-page="dashboard">Dashboard</button>
+            <button class="nav-item block w-full text-left text-white text-lg font-medium px-4 py-2 rounded-md hover:bg-blue-600 dark:hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300" data-page="assignments">Assignments</button>
+            <button class="nav-item block w-full text-left text-white text-lg font-medium px-4 py-2 rounded-md hover:bg-blue-600 dark:hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300" data-page="academicPlanning">Academic Planning</button>
+            <button class="nav-item block w-full text-left text-white text-lg font-medium px-4 py-2 rounded-md hover:bg-blue-600 dark:hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300" data-page="fees">Fees</button>
+            <button class="nav-item block w-full text-left text-white text-lg font-medium px-4 py-2 rounded-md hover:bg-blue-600 dark:hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300" data-page="library">Library</button>
+            <button class="nav-item block w-full text-left text-white text-lg font-medium px-4 py-2 rounded-md hover:bg-blue-600 dark:hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300" data-page="onlineTests">Online Tests</button>
+            <button class="nav-item block w-full text-left text-white text-lg font-medium px-4 py-2 rounded-md hover:bg-blue-600 dark:hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300" data-page="resultAnalysis">Result Analysis</button>
+            <button class="nav-item block w-full text-left text-white text-lg font-medium px-4 py-2 rounded-md hover:bg-blue-600 dark:hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300" data-page="mentorProfile">Mentor Profile</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-6 md:p-8 lg:p-10 container mx-auto">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="page-content active">
+            <!-- Welcome Card -->
+            <div class="bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-700 dark:to-purple-700 text-white p-6 rounded-2xl shadow-xl lg:col-span-3 mb-8">
+                <h2 class="text-2xl font-semibold mb-4 border-b-2 border-white pb-2">Welcome, Anand Kumar!</h2>
+                <p class="text-lg mb-4">You're logged into the OIST CSDS Department LMS. Stay updated with your academics!</p>
+                <div class="flex items-center text-sm">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1zm4.356 4.356A1 1 0 0014 5h-1a1 1 0 100 2h.023l.186-.356zM6 10a1 1 0 011-1h1a1 1 0 110 2H7a1 1 0 01-1-1zm-3 2a1 1 0 000 2h1a1 1 0 100-2H3zm13.356-1.644A1 1 0 0015 14h1a1 1 0 100-2h-.023l-.186.356zM8 16a1 1 0 011-1h1a1 1 0 110 2H9a1 1 0 01-1-1zm-3 2a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1zM10 20a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zm0-18a1 1 0 00-1-1h-.023l-.186.356A1 1 0 0014 5h-1a1 1 0 100 2h.023l.186-.356A1 1 0 0015 14h1a1 1 0 100-2h-.023l-.186.356A1 1 0 0014 5h-1a1 1 0 100 2h.023l.186-.356A1 1 0 0015 14h1a1 1 0 100-2h-.023l-.186.356A1 1 0 0014 5h-1a1 1 0 100 2h.023l.186-.356z" clip-rule="evenodd"></path></svg>
+                    Last Login: July 15, 2025, 09:30 AM
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Announcements Card -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200 border-b-2 border-blue-500 pb-2">Latest Announcements</h2>
+                    <ul class="space-y-3">
+                        <li class="border-b border-gray-200 dark:border-gray-700 pb-3 last:border-b-0">
+                            <h3 class="font-semibold text-lg text-blue-600 dark:text-blue-400">Mid-Term Exam Schedule Released</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">2025-07-10</p>
+                            <p class="text-gray-700 dark:text-gray-300">Check your academic planning for detailed schedule.</p>
+                        </li>
+                        <li class="border-b border-gray-200 dark:border-gray-700 pb-3 last:border-b-0">
+                            <h3 class="font-semibold text-lg text-blue-600 dark:text-blue-400">New Library Resources Available</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">2025-07-05</p>
+                            <p class="text-gray-700 dark:text-gray-300">Explore new e-books and journals in the library section.</p>
+                        </li>
+                        <li class="border-b border-gray-200 dark:border-gray-700 pb-3 last:border-b-0">
+                            <h3 class="font-semibold text-lg text-blue-600 dark:text-blue-400">Assignment Submission Deadline Extended</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">2025-07-01</p>
+                            <p class="text-gray-700 dark:text-gray-300">Physics assignment deadline moved to July 15th.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Upcoming Events Card -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200 border-b-2 border-blue-500 pb-2">Upcoming Events</h2>
+                    <ul class="space-y-3">
+                        <li class="border-b border-gray-200 dark:border-gray-700 pb-3 last:border-b-0">
+                            <h3 class="font-semibold text-lg text-green-600 dark:text-green-400">Guest Lecture: AI in Education</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">July 20, 2025 at 10:00 AM</p>
+                        </li>
+                        <li class="border-b border-gray-200 dark:border-gray-700 pb-3 last:border-b-0">
+                            <h3 class="font-semibold text-lg text-green-600 dark:text-green-400">Project Submission Workshop</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">July 25, 2025 at 02:00 PM</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Quick Links Card -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200 border-b-2 border-blue-500 pb-2">Quick Links</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button class="flex items-center justify-center bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-4 py-3 rounded-xl shadow-md hover:bg-blue-200 dark:hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <span class="text-2xl mr-2">📊</span>
+                            <span class="font-medium text-lg">View Grades</span>
+                        </button>
+                        <button class="flex items-center justify-center bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-4 py-3 rounded-xl shadow-md hover:bg-blue-200 dark:hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <span class="text-2xl mr-2">📝</span>
+                            <span class="font-medium text-lg">Submit Assignment</span>
+                        </button>
+                        <button class="flex items-center justify-center bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-4 py-3 rounded-xl shadow-md hover:bg-blue-200 dark:hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <span class="text-2xl mr-2">💰</span>
+                            <span class="font-medium text-lg">Check Fees</span>
+                        </button>
+                        <button class="flex items-center justify-center bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-4 py-3 rounded-xl shadow-md hover:bg-blue-200 dark:hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <span class="text-2xl mr-2">📚</span>
+                            <span class="font-medium text-lg">Browse Library</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Assignments Section -->
+        <section id="assignments" class="page-content hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200 border-b-2 border-blue-500 pb-2">Assignments</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white dark:bg-gray-700 rounded-lg shadow-md">
+                        <thead>
+                            <tr class="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 uppercase text-sm leading-normal">
+                                <th class="py-3 px-6 text-left rounded-tl-lg">Title</th>
+                                <th class="py-3 px-6 text-left">Course</th>
+                                <th class="py-3 px-6 text-left">Due Date</th>
+                                <th class="py-3 px-6 text-left">Status</th>
+                                <th class="py-3 px-6 text-center rounded-tr-lg">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700 dark:text-gray-300 text-sm font-light">
+                            <!-- Assignment 1 -->
+                            <tr class="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200">
+                                <td class="py-3 px-6 text-left whitespace-nowrap">Data Structures Project</td>
+                                <td class="py-3 px-6 text-left">CSDS301</td>
+                                <td class="py-3 px-6 text-left">2025-07-25</td>
+                                <td class="py-3 px-6 text-left">
+                                    <span class="py-1 px-3 rounded-full text-xs font-semibold bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-200">Pending</span>
+                                </td>
+                                <td class="py-3 px-6 text-center">
+                                    <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mr-2 transition-transform transform hover:scale-105">Submit</button>
+                                    <button class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">Download</button>
+                                </td>
+                            </tr>
+                            <!-- Assignment 2 -->
+                            <tr class="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200">
+                                <td class="py-3 px-6 text-left whitespace-nowrap">Algorithm Analysis Homework 3</td>
+                                <td class="py-3 px-6 text-left">CSDS302</td>
+                                <td class="py-3 px-6 text-left">2025-07-20</td>
+                                <td class="py-3 px-6 text-left">
+                                    <span class="py-1 px-3 rounded-full text-xs font-semibold bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-200">Submitted</span>
+                                </td>
+                                <td class="py-3 px-6 text-center">
+                                    <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mr-2 transition-transform transform hover:scale-105">View Submission</button>
+                                    <button class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">Download</button>
+                                </td>
+                            </tr>
+                            <!-- Assignment 3 -->
+                            <tr class="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200">
+                                <td class="py-3 px-6 text-left whitespace-nowrap">Database Design Case Study</td>
+                                <td class="py-3 px-6 text-left">CSDS303</td>
+                                <td class="py-3 px-6 text-left">2025-08-01</td>
+                                <td class="py-3 px-6 text-left">
+                                    <span class="py-1 px-3 rounded-full text-xs font-semibold bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-200">Pending</span>
+                                </td>
+                                <td class="py-3 px-6 text-center">
+                                    <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mr-2 transition-transform transform hover:scale-105">Submit</button>
+                                    <button class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">Download</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Academic Planning Section -->
+        <section id="academicPlanning" class="page-content hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200 border-b-2 border-blue-500 pb-2">Academic Planning</h2>
+                <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Current Semester (VI) Courses</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                    <div class="bg-blue-50 dark:bg-gray-700 p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border-l-4 border-blue-500 dark:border-blue-400">
+                        <h4 class="text-xl font-bold text-blue-800 dark:text-blue-300 mb-2">Data Structures and Algorithms (CSDS301)</h4>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Instructor:</span> Dr. Priya Sharma</p>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Semester:</span> VI</p>
+                        <p class="text-gray-700 dark:text-gray-300"><span class="font-semibold">Schedule:</span> Mon, Wed, Fri - 10:00-11:00 AM</p>
+                        <button class="mt-4 bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">View Syllabus</button>
+                    </div>
+                    <div class="bg-blue-50 dark:bg-gray-700 p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border-l-4 border-blue-500 dark:border-blue-400">
+                        <h4 class="text-xl font-bold text-blue-800 dark:text-blue-300 mb-2">Operating Systems (CSDS302)</h4>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Instructor:</span> Prof. Alok Singh</p>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Semester:</span> VI</p>
+                        <p class="text-gray-700 dark:text-gray-300"><span class="font-semibold">Schedule:</span> Tue, Thu - 11:30-01:00 PM</p>
+                        <button class="mt-4 bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">View Syllabus</button>
+                    </div>
+                    <div class="bg-blue-50 dark:bg-gray-700 p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border-l-4 border-blue-500 dark:border-blue-400">
+                        <h4 class="text-xl font-bold text-blue-800 dark:text-blue-300 mb-2">Database Management Systems (CSDS303)</h4>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Instructor:</span> Ms. Neha Gupta</p>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Semester:</span> VI</p>
+                        <p class="text-gray-700 dark:text-gray-300"><span class="font-semibold">Schedule:</span> Mon, Wed - 02:00-03:30 PM</p>
+                        <button class="mt-4 bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">View Syllabus</button>
+                    </div>
+                    <div class="bg-blue-50 dark:bg-gray-700 p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border-l-4 border-blue-500 dark:border-blue-400">
+                        <h4 class="text-xl font-bold text-blue-800 dark:text-blue-300 mb-2">Web Technologies (CSDS304)</h4>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Instructor:</span> Dr. Vivek Kumar</p>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Semester:</span> VI</p>
+                        <p class="text-gray-700 dark:text-gray-300"><span class="font-semibold">Schedule:</span> Tue, Thu, Fri - 09:00-10:00 AM</p>
+                        <button class="mt-4 bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">View Syllabus</button>
+                    </div>
+                </div>
+                <h3 class="text-xl font-semibold mt-8 mb-4 text-gray-800 dark:text-gray-200">Academic Calendar</h3>
+                <div class="bg-gray-100 dark:bg-gray-600 p-6 rounded-xl text-center text-gray-600 dark:text-gray-300">
+                    <p>A full interactive academic calendar would go here.</p>
+                    <p class="text-sm mt-2">Key Dates: Registrations, Exams, Holidays, etc.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fees Section -->
+        <section id="fees" class="page-content hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200 border-b-2 border-blue-500 pb-2">Fee Management</h2>
+                <div class="mb-6">
+                    <p class="text-lg text-gray-700 dark:text-gray-300 mb-2">Total Outstanding Fees: <span class="font-bold text-red-600 dark:text-red-400">₹50,000</span></p>
+                    <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105">Proceed to Pay Now</button>
+                </div>
+
+                <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Fee Details</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white dark:bg-gray-700 rounded-lg shadow-md">
+                        <thead>
+                            <tr class="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 uppercase text-sm leading-normal">
+                                <th class="py-3 px-6 text-left rounded-tl-lg">Fee Type</th>
+                                <th class="py-3 px-6 text-right">Amount (₹)</th>
+                                <th class="py-3 px-6 text-left">Due Date</th>
+                                <th class="py-3 px-6 text-left rounded-tr-lg">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700 dark:text-gray-300 text-sm font-light">
+                            <tr>
+                                <td class="py-3 px-6 text-left">Tuition Fee</td>
+                                <td class="py-3 px-6 text-right">45,000</td>
+                                <td class="py-3 px-6 text-left">2025-07-31</td>
+                                <td class="py-3 px-6 text-left">
+                                    <span class="py-1 px-3 rounded-full text-xs font-semibold bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-200">Pending</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-6 text-left">Library Fee</td>
+                                <td class="py-3 px-6 text-right">2,000</td>
+                                <td class="py-3 px-6 text-left">2025-07-31</td>
+                                <td class="py-3 px-6 text-left">
+                                    <span class="py-1 px-3 rounded-full text-xs font-semibold bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-200">Paid</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-6 text-left">Examination Fee (Odd Sem)</td>
+                                <td class="py-3 px-6 text-right">3,500</td>
+                                <td class="py-3 px-6 text-left">2025-06-30</td>
+                                <td class="py-3 px-6 text-left">
+                                    <span class="py-1 px-3 rounded-full text-xs font-semibold bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-200">Paid</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-6 text-left">Development Fund</td>
+                                <td class="py-3 px-6 text-right">5,000</td>
+                                <td class="py-3 px-6 text-left">2025-07-31</td>
+                                <td class="py-3 px-6 text-left">
+                                    <span class="py-1 px-3 rounded-full text-xs font-semibold bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-200">Pending</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="text-xl font-semibold mt-8 mb-4 text-gray-800 dark:text-gray-200">Payment History</h3>
+                <div class="bg-gray-100 dark:bg-gray-600 p-6 rounded-xl text-center text-gray-600 dark:text-gray-300">
+                    <p>Your past payment transactions will be listed here.</p>
+                    <p class="text-sm mt-2">Example: Transaction ID, Date, Amount, Status.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Library Section -->
+        <section id="library" class="page-content hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200 border-b-2 border-blue-500 pb-2">Library Resources</h2>
+                <div class="mb-6 flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="librarySearchInput" placeholder="Search by title, author, or genre..." class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400">
+                    <button id="librarySearchButton" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105">Search</button>
+                </div>
+
+                <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Available Books</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white dark:bg-gray-700 rounded-lg shadow-md">
+                        <thead>
+                            <tr class="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 uppercase text-sm leading-normal">
+                                <th class="py-3 px-6 text-left rounded-tl-lg">Title</th>
+                                <th class="py-3 px-6 text-left">Author</th>
+                                <th class="py-3 px-6 text-left">Genre</th>
+                                <th class="py-3 px-6 text-left rounded-tr-lg">Availability</th>
+                            </tr>
+                        </thead>
+                        <tbody id="libraryTableBody" class="text-gray-700 dark:text-gray-300 text-sm font-light">
+                            <!-- Books will be dynamically inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="text-xl font-semibold mt-8 mb-4 text-gray-800 dark:text-gray-200">E-Resources & Journals</h3>
+                <div class="bg-gray-100 dark:bg-gray-600 p-6 rounded-xl text-center text-gray-600 dark:text-gray-300">
+                    <p>Links to online journals, databases, and digital archives.</p>
+                    <p class="text-sm mt-2">Example: ACM Digital Library, IEEE Xplore, ScienceDirect.</p>
+                    <button class="mt-4 bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">Access E-Resources Portal</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Online Tests Section -->
+        <section id="onlineTests" class="page-content hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200 border-b-2 border-blue-500 pb-2">Online Tests</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-gray-700 p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border-t-4 border-blue-500 dark:border-blue-400">
+                        <h4 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">Mid-Term Exam - Data Structures</h4>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Course:</span> CSDS301</p>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Date:</span> 2025-07-22</p>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Time:</span> 10:00 AM</p>
+                        <p class="text-gray-700 dark:text-gray-300 mb-3"><span class="font-semibold">Duration:</span> 90 min</p>
+                        <div class="flex items-center justify-between">
+                            <span class="py-1 px-3 rounded-full text-sm font-semibold bg-yellow-200 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-200">Upcoming</span>
+                            <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">Start Test</button>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-700 p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border-t-4 border-blue-500 dark:border-blue-400">
+                        <h4 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">Quiz 2 - Operating Systems</h4>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Course:</span> CSDS302</p>
+                        <p class="text-700 dark:text-gray-300 mb-1"><span class="font-semibold">Date:</span> 2025-07-18</p>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Time:</span> 02:00 PM</p>
+                        <p class="text-gray-700 dark:text-gray-300 mb-3"><span class="font-semibold">Duration:</span> 30 min</p>
+                        <div class="flex items-center justify-between">
+                            <span class="py-1 px-3 rounded-full text-sm font-semibold bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-200">Completed</span>
+                            <button class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">View Results</button>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-700 p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border-t-4 border-blue-500 dark:border-blue-400">
+                        <h4 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">Final Exam - Database Management</h4>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Course:</span> CSDS303</p>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Date:</span> 2025-08-10</p>
+                        <p class="text-gray-700 dark:text-gray-300 mb-1"><span class="font-semibold">Time:</span> 09:00 AM</p>
+                        <p class="text-gray-700 dark:text-gray-300 mb-3"><span class="font-semibold">Duration:</span> 120 min</p>
+                        <div class="flex items-center justify-between">
+                            <span class="py-1 px-3 rounded-full text-sm font-semibold bg-yellow-200 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-200">Upcoming</span>
+                            <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">Start Test</button>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="text-xl font-semibold mt-8 mb-4 text-gray-800 dark:text-gray-200">Instructions & Guidelines</h3>
+                <div class="bg-gray-100 dark:bg-gray-600 p-6 rounded-xl text-gray-700 dark:text-gray-300">
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Ensure stable internet connection before starting the test.</li>
+                        <li>Do not navigate away from the test window.</li>
+                        <li>Results will be published in the Result Analysis section.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Result Analysis Section -->
+        <section id="resultAnalysis" class="page-content hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200 border-b-2 border-blue-500 pb-2">Result Analysis</h2>
+                <div class="mb-6 bg-blue-100 dark:bg-blue-900 p-5 rounded-xl text-blue-800 dark:text-blue-200 shadow-md">
+                    <p class="text-lg font-semibold">Your Overall GPA (Semester V): <span class="text-2xl font-bold text-purple-600 dark:text-purple-400">86.75</span></p>
+                    <p class="text-sm mt-1">Based on previous semester's performance.</p>
+                </div>
+
+                <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Semester-wise Results</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white dark:bg-gray-700 rounded-lg shadow-md">
+                        <thead>
+                            <tr class="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 uppercase text-sm leading-normal">
+                                <th class="py-3 px-6 text-left rounded-tl-lg">Course Title</th>
+                                <th class="py-3 px-6 text-left">Course Code</th>
+                                <th class="py-3 px-6 text-left">Semester</th>
+                                <th class="py-3 px-6 text-center">Grade</th>
+                                <th class="py-3 px-6 text-center rounded-tr-lg">Score (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700 dark:text-gray-300 text-sm font-light">
+                            <tr>
+                                <td class="py-3 px-6 text-left">Data Structures and Algorithms</td>
+                                <td class="py-3 px-6 text-left">CSDS301</td>
+                                <td class="py-3 px-6 text-left">V</td>
+                                <td class="py-3 px-6 text-center font-bold text-lg">A</td>
+                                <td class="py-3 px-6 text-center">92</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-6 text-left">Operating Systems</td>
+                                <td class="py-3 px-6 text-left">CSDS302</td>
+                                <td class="py-3 px-6 text-left">V</td>
+                                <td class="py-3 px-6 text-center font-bold text-lg">B+</td>
+                                <td class="py-3 px-6 text-center">85</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-6 text-left">Database Management Systems</td>
+                                <td class="py-3 px-6 text-left">CSDS303</td>
+                                <td class="py-3 px-6 text-left">V</td>
+                                <td class="py-3 px-6 text-center font-bold text-lg">A-</td>
+                                <td class="py-3 px-6 text-center">89</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-6 text-left">Web Technologies</td>
+                                <td class="py-3 px-6 text-left">CSDS304</td>
+                                <td class="py-3 px-6 text-left">V</td>
+                                <td class="py-3 px-6 text-center font-bold text-lg">B</td>
+                                <td class="py-3 px-6 text-center">81</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="text-xl font-semibold mt-8 mb-4 text-gray-800 dark:text-gray-200">Performance Trends</h3>
+                <div class="bg-gray-100 dark:bg-gray-600 p-6 rounded-xl text-center text-gray-600 dark:text-gray-300">
+                    <p>Charts and graphs showing your academic performance over semesters would be displayed here.</p>
+                    <p class="text-sm mt-2">Example: Grade distribution, subject-wise performance, progress tracking.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mentor Profile Section -->
+        <section id="mentorProfile" class="page-content hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 text-center">
+                <h2 class="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200 border-b-2 border-blue-500 pb-2">Your Mentor Profile</h2>
+                <img src="/rupali.png" alt="Rupali Dubey Profile" class="h-32 w-32 rounded-full mx-auto mb-4 border-4 border-blue-500 shadow-lg">
+                <h3 class="text-3xl font-bold text-gray-800 dark:text-gray-200 mb-2">Rupali Dubey</h3>
+                <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">Senior Faculty, CSDS Department</p>
+                <div class="text-left max-w-lg mx-auto">
+                    <p class="text-gray-700 dark:text-gray-300 mb-2">Rupali Dubey is a dedicated and experienced faculty member specializing in Software Engineering & OOPM. She is committed to fostering a supportive learning environment and guiding students towards academic excellence.</p>
+                    <p class="text-gray-700 dark:text-gray-300 mb-2"><span class="font-semibold">Email:</span> rupali.dubey@oist.edu</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 dark:bg-gray-950 text-white p-6 text-sm mt-auto">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Contact Form -->
+            <div>
+                <h3 class="text-lg font-bold mb-4 border-b-2 border-purple-500 pb-2">Contact Us</h3>
+                <form id="contactForm" class="space-y-4">
+                    <div>
+                        <label for="contactName" class="block text-sm font-medium text-gray-300">Name</label>
+                        <input type="text" id="contactName" name="name" class="mt-1 block w-full p-2 rounded-md bg-gray-700 border border-gray-600 text-white focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="contactEmail" class="block text-sm font-medium text-gray-300">Email</label>
+                        <input type="email" id="contactEmail" name="email" class="mt-1 block w-full p-2 rounded-md bg-gray-700 border border-gray-600 text-white focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="contactSubject" class="block text-sm font-medium text-gray-300">Subject</label>
+                        <input type="text" id="contactSubject" name="subject" class="mt-1 block w-full p-2 rounded-md bg-gray-700 border border-gray-600 text-white focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="contactMessage" class="block text-sm font-medium text-gray-300">Message</label>
+                        <textarea id="contactMessage" name="message" rows="4" class="mt-1 block w-full p-2 rounded-md bg-gray-700 border border-gray-600 text-white focus:ring-blue-500 focus:border-blue-500" required></textarea>
+                    </div>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105">Send Message</button>
+                </form>
+            </div>
+
+            <!-- Quick Links / Navigation -->
+            <div>
+                <h3 class="text-lg font-bold mb-4 border-b-2 border-purple-500 pb-2">Quick Navigation</h3>
+                <ul class="space-y-2">
+                    <li><a href="#dashboard" class="text-gray-300 hover:text-white transition-colors duration-200">Dashboard</a></li>
+                    <li><a href="#assignments" class="text-gray-300 hover:text-white transition-colors duration-200">Assignments</a></li>
+                    <li><a href="#academicPlanning" class="text-gray-300 hover:text-white transition-colors duration-200">Academic Planning</a></li>
+                    <li><a href="#fees" class="text-gray-300 hover:text-white transition-colors duration-200">Fees</a></li>
+                    <li><a href="#library" class="text-gray-300 hover:text-white transition-colors duration-200">Library</a></li>
+                    <li><a href="#onlineTests" class="text-gray-300 hover:text-white transition-colors duration-200">Online Tests</a></li>
+                    <li><a href="#resultAnalysis" class="text-gray-300 hover:text-white transition-colors duration-200">Result Analysis</a></li>
+                    <li><a href="#mentorProfile" class="text-gray-300 hover:text-white transition-colors duration-200">Mentor Profile</a></li>
+                </ul>
+            </div>
+
+            <!-- Social Links -->
+            <div class="text-center md:text-left">
+                <h3 class="text-lg font-bold mb-4 border-b-2 border-purple-500 pb-2">Connect With Us</h3>
+                <div class="flex justify-center md:justify-start space-x-6 text-3xl">
+                    <a href="https://www.facebook.com/oist.bhopal" target="_blank" rel="noopener noreferrer" class="text-white hover:text-blue-400 transition-colors duration-200" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="https://twitter.com/oistbhopal" target="_blank" rel="noopener noreferrer" class="text-white hover:text-blue-300 transition-colors duration-200" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.linkedin.com/school/oriental-institute-of-science-and-technology-bhopal/" target="_blank" rel="noopener noreferrer" class="text-white hover:text-blue-600 transition-colors duration-200" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.youtube.com/user/OISTBhopal" target="_blank" rel="noopener noreferrer" class="text-white hover:text-red-500 transition-colors duration-200" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.instagram.com/oistbhopal/" target="_blank" rel="noopener noreferrer" class="text-white hover:text-pink-400 transition-colors duration-200" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+                <p class="text-gray-400 mt-4">&copy; <span id="currentYear"></span> Oriental Institute of Science and Technology. All rights reserved.</p>
+                <p class="text-gray-400 mt-1">CSDS Department LMS | Designed with ❤️</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const openIcon = mobileMenuToggle.querySelector('.open-icon');
+            const closeIcon = mobileMenuToggle.querySelector('.close-icon');
+            const navItems = document.querySelectorAll('.nav-item');
+            const pageContents = document.querySelectorAll('.page-content');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const sunIcon = darkModeToggle.querySelector('.sun-icon');
+            const moonIcon = darkModeToggle.querySelector('.moon-icon');
+            const contactForm = document.getElementById('contactForm');
+            const librarySearchInput = document.getElementById('librarySearchInput');
+            const librarySearchButton = document.getElementById('librarySearchButton');
+            const libraryTableBody = document.getElementById('libraryTableBody');
+
+            // Set current year in footer
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            // --- Page Navigation Logic ---
+            const showPage = (pageId) => {
+                pageContents.forEach(page => {
+                    if (page.id === pageId) {
+                        page.classList.remove('hidden');
+                        page.classList.add('active'); // Add active for transition
+                    } else {
+                        page.classList.add('hidden');
+                        page.classList.remove('active'); // Remove active
+                    }
+                });
+                // Close mobile menu after navigation
+                mobileMenu.classList.add('hidden');
+                openIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            };
+
+            // Event listener for mobile menu toggle
+            mobileMenuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                openIcon.classList.toggle('hidden');
+                closeIcon.classList.toggle('hidden');
+            });
+
+            // Event listeners for navigation items
+            navItems.forEach(item => {
+                item.addEventListener('click', (event) => {
+                    const page = event.target.dataset.page;
+                    showPage(page);
+                });
+            });
+
+            // --- Dark Mode Logic ---
+            const toggleDarkMode = () => {
+                document.documentElement.classList.toggle('dark');
+                const isDarkMode = document.documentElement.classList.contains('dark');
+                localStorage.setItem('darkMode', isDarkMode);
+
+                if (isDarkMode) {
+                    sunIcon.classList.add('hidden');
+                    moonIcon.classList.remove('hidden');
+                } else {
+                    sunIcon.classList.remove('hidden');
+                    moonIcon.classList.add('hidden');
+                }
+            };
+
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+
+            // Check for saved dark mode preference on load
+            const savedDarkMode = localStorage.getItem('darkMode');
+            if (savedDarkMode === 'true') {
+                document.documentElement.classList.add('dark');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            }
+
+            // --- Contact Form Submission Logic ---
+            contactForm.addEventListener('submit', (event) => {
+                event.preventDefault(); // Prevent default form submission
+                const formData = new FormData(contactForm);
+                const data = Object.fromEntries(formData.entries());
+                console.log('Contact Form Submitted:', data);
+                // In a real application, you would send this data to a backend server.
+                alert('Thank you for your message! We will get back to you soon.');
+                contactForm.reset(); // Clear the form
+            });
+
+            // --- Library Search Logic ---
+            const booksData = [
+                { id: 1, title: 'Introduction to Algorithms', author: 'Cormen, Leiserson, Rivest, Stein', genre: 'Algorithms', availability: 'Available' },
+                { id: 2, title: 'Database System Concepts', author: 'Silberschatz, Korth, Sudarshan', genre: 'Databases', availability: 'Issued' },
+                { id: 3, title: 'Operating System Concepts', author: 'Silberschatz, Galvin, Gagne', genre: 'Operating Systems', availability: 'Available' },
+                { id: 4, title: 'Computer Networks', author: 'Andrew S. Tanenbaum', genre: 'Networking', availability: 'Available' },
+                { id: 5, title: 'Design Patterns', author: 'Gamma, Helm, Johnson, Vlissides', genre: 'Software Engineering', availability: 'Available' },
+            ];
+
+            const renderLibraryBooks = (books) => {
+                libraryTableBody.innerHTML = ''; // Clear previous results
+                if (books.length === 0) {
+                    libraryTableBody.innerHTML = `<tr><td colspan="4" class="py-4 px-6 text-center text-gray-500 dark:text-gray-400">No books found matching your search.</td></tr>`;
+                    return;
+                }
+
+                books.forEach(book => {
+                    const row = document.createElement('tr');
+                    row.classList.add('border-b', 'border-gray-200', 'dark:border-gray-600', 'hover:bg-gray-100', 'dark:hover:bg-gray-600', 'transition-colors', 'duration-200');
+
+                    const availabilityClass = book.availability === 'Available' ? 'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-200' : 'bg-yellow-200 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-200';
+
+                    row.innerHTML = `
+                        <td class="py-3 px-6 text-left">${book.title}</td>
+                        <td class="py-3 px-6 text-left">${book.author}</td>
+                        <td class="py-3 px-6 text-left">${book.genre}</td>
+                        <td class="py-3 px-6 text-left">
+                            <span class="py-1 px-3 rounded-full text-xs font-semibold ${availabilityClass}">
+                                ${book.availability}
+                            </span>
+                        </td>
+                    `;
+                    libraryTableBody.appendChild(row);
+                });
+            };
+
+            // Initial render of library books
+            renderLibraryBooks(booksData);
+
+            const filterLibraryBooks = () => {
+                const searchTerm = librarySearchInput.value.toLowerCase();
+                const filtered = booksData.filter(book =>
+                    book.title.toLowerCase().includes(searchTerm) ||
+                    book.author.toLowerCase().includes(searchTerm) ||
+                    book.genre.toLowerCase().includes(searchTerm)
+                );
+                renderLibraryBooks(filtered);
+            };
+
+            librarySearchButton.addEventListener('click', filterLibraryBooks);
+            librarySearchInput.addEventListener('keyup', filterLibraryBooks); // Live search
+
+            // Initial page load
+            showPage('dashboard');
+        });
+    </script>
+</body>
+</html>
