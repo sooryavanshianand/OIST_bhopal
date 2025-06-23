@@ -100,16 +100,7 @@
         <span class="inline sm:hidden text-lg font-bold">AK</span>
     </div>
 
-    <!-- Logout Button -->
-    <button
-        class="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full shadow-md text-xs sm:text-sm transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-300">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 11-4 0v-1m0-8v1a2 2 0 104 0V7" />
-        </svg>
-        Logout
-    </button>
+    
 </div>
 
 
@@ -176,7 +167,11 @@
                 data-page="resultAnalysis">Result Analysis</button>
             <button
                 class="nav-item block w-full text-left text-white text-lg font-medium px-4 py-2 rounded-md hover:bg-blue-600 dark:hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                data-page="mentorProfile">Mentor Profile</button>
+                data-page="mentorProfile">Faculty</button>
+                <!-- Logout Button -->
+    <button
+                class="nav-item  block w-full text-left text-red-500 text-lg font-medium px-4 py-2 rounded-md hover:bg-blue-600 dark:hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                data-page="mentorProfile">Logout</button>
         </div>
     </nav>
 
@@ -800,26 +795,83 @@
             </div>
         </section>
 
-        <!-- Mentor Profile Section -->
-        <section id="mentorProfile" class="page-content hidden">
-            <div
-                class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 text-center">
-                <h2
-                    class="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200 border-b-2 border-blue-500 pb-2">
-                    Your Mentor Profile</h2>
-                <img src="rupali.png" alt="Rupali Dubey Profile"
-                    class="h-32 w-32 rounded-full mx-auto mb-4 border-4 border-blue-500 shadow-lg">
-                <h3 class="text-3xl font-bold text-gray-800 dark:text-gray-200 mb-2">Rupali Dubey</h3>
-                <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">Senior Faculty, CSDS Department</p>
-                <div class="text-left max-w-lg mx-auto">
-                    <p class="text-gray-700 dark:text-gray-300 mb-2">Rupali Dubey is a dedicated and experienced faculty
-                        member specializing in Software Engineering & OOPM. She is committed to fostering a supportive
-                        learning environment and guiding students towards academic excellence.</p>
-                    <p class="text-gray-700 dark:text-gray-300 mb-2"><span class="font-semibold">Email:</span>
-                        rupali.dubey@oist.edu</p>
-                </div>
+        <!-- Faculty Profile Section -->
+       <section id="mentorProfile" class="page-content hidden">
+    <h2 class="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200 text-center border-b-2 border-blue-500 pb-2">
+        Your Mentor Profile
+    </h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+               
+<!-- Dr. Swati Pandey -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 text-center">
+            <div class="h-32 w-32 rounded-full mx-auto mb-4 bg-purple-500 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                SP
             </div>
-        </section>
+            <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">Dr. Swati Pandey</h3>
+            <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">HoD, Data Science Department</p>
+            <div class="text-left max-w-xs mx-auto">
+                <p class="text-gray-700 dark:text-gray-300 mb-2">Expert in Artificial Intelligence & Data Science.</p>
+                <p class="text-gray-700 dark:text-gray-300 mb-2"><span class="font-semibold">Email:</span> swati.pandey@oist.edu</p>
+            </div>
+        </div>
+
+        <!-- Rupali Dubey -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 text-center">
+            <img src="rupali.png" alt="Rupali Dubey Profile"
+                class="h-32 w-32 rounded-full mx-auto mb-4 border-4 border-blue-500 shadow-lg">
+            <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">Rupali Dubey</h3>
+            <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">Senior Faculty, CSDS Department</p>
+            <div class="text-left max-w-xs mx-auto">
+                <p class="text-gray-700 dark:text-gray-300 mb-2">Specialized in Software Engineering & OOPM.</p>
+                <p class="text-gray-700 dark:text-gray-300 mb-2"><span class="font-semibold">Email:</span> rupali.dubey@oist.edu</p>
+            </div>
+        </div>
+
+
+        <!-- Hemlata Sukhwani -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 text-center">
+            <div class="h-32 w-32 rounded-full mx-auto mb-4 bg-green-500 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                HS
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">Hemlata Sukhwani</h3>
+            <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">Assistant Professor, CSDS Department</p>
+            <div class="text-left max-w-xs mx-auto">
+                <p class="text-gray-700 dark:text-gray-300 mb-2">Teaches Data Structures & Algorithms and Design & Analysis.</p>
+                <p class="text-gray-700 dark:text-gray-300 mb-2"><span class="font-semibold">Email:</span> hemlata.sukhwani@oist.edu</p>
+            </div>
+        </div>
+
+        <!-- Rajeev Raghuvanshi -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 text-center">
+            <div class="h-32 w-32 rounded-full mx-auto mb-4 bg-red-500 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                RR
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">Rajeev Raghuvanshi</h3>
+            <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">Assistant Professor, CSDS Department</p>
+            <div class="text-left max-w-xs mx-auto">
+                <p class="text-gray-700 dark:text-gray-300 mb-2">Specializes in Operating Systems & OOP.</p>
+                <p class="text-gray-700 dark:text-gray-300 mb-2"><span class="font-semibold">Email:</span> rajeev.raghuvanshi@oist.edu</p>
+            </div>
+        </div>
+
+        <!-- Rajeshwari Dhote -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 text-center">
+            <div class="h-32 w-32 rounded-full mx-auto mb-4 bg-yellow-500 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                RD
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">Rajeshwari Dhote</h3>
+            <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">Assistant Professor, CSDS Department</p>
+            <div class="text-left max-w-xs mx-auto">
+                <p class="text-gray-700 dark:text-gray-300 mb-2">Teaches Discrete Structures & Linear Algebra.</p>
+                <p class="text-gray-700 dark:text-gray-300 mb-2"><span class="font-semibold">Email:</span> rajeshwari.dhote@oist.edu</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
 
     </main>
 
@@ -828,7 +880,7 @@
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Contact Form -->
             <div class="hidden">
-                <h3 class="text-lg font-bold mb-4 border-b-2 border-purple-500 pb-2">Contact Us</h3>
+                <h3 class="text-lg font-bold mb-4 mt-1 border-b-2 border-purple-500 pb-2">Contact Us</h3>
                 <form id="contactForm" class="space-y-4">
                     <div>
                         <label for="contactName" class="block text-sm font-medium text-gray-300">Name</label>
@@ -860,7 +912,21 @@
                 </form>
             </div>
             <!-- 24/7 Help Center -->
-<div class="bg-gray-800 p-6 rounded-2xl shadow-xl text-white mt-8">
+             <!-- Floating 24/7 Help Button -->
+<!-- <a href="#helpSection" 
+   class="fixed bottom-6 right-6 z-25 bg-gradient-to-br from-purple-600 to-blue-500 text-white rounded-full p-4 shadow-lg hover:scale-105 transform transition-all duration-300 flex flex-col items-center justify-center">
+     -->
+    <!-- 24/7 Logo SVG Icon (Simple Headset/Support Icon) -->
+    <!-- <img url="https://static.vecteezy.com/system/resources/previews/005/893/480/non_2x/support-customer-24-7-silhouette-icon-help-service-call-center-logo-headphone-with-bubble-around-the-clock-hotline-concept-telephone-center-for-help-customers-sign-isolated-illustration-vector.jpg" class="h-8 w-8 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M18 13a3 3 0 003-3V9a8 8 0 10-16 0v1a3 3 0 003 3v4a4 4 0 008 0v-4z" />
+    </img> -->
+
+    <!-- Text -->
+    <!-- <span class="text-xs font-semibold">24/7 Help</span> -->
+<!-- </a> -->
+
+<div class="bg-gray-800 p-6 rounded-2xl shadow-xl text-white mt-0 " id="helpSection">
     <h3 class="text-2xl font-bold mb-4 border-b-2 border-blue-500 pb-2 flex items-center">
         <svg class="h-6 w-6 text-blue-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
             stroke="currentColor">
